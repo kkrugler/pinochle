@@ -1,0 +1,15 @@
+.DS_Store
+.classpath
+.project
+.settings/
+build
+target
+build-eclipse
+*.dot
+*.hprof
+junit*.properties
+ec2
+authentication.properties
+build-revision.properties
+my.properties
+labs/data/
