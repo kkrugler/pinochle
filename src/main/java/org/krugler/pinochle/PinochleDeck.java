@@ -1,79 +1,58 @@
 package org.krugler.pinochle;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class PinochleDeck {
-    public static int CARDS_IN_DECK = 48;
+    public static int CARDS_IN_DECK = Rank.NUM_RANKS * Suit.NUM_SUITS * 2;
+    public static int UNIQUE_CARDS_IN_DECK = Rank.NUM_RANKS * Suit.NUM_SUITS;
     
-    private ArrayList<Card> _deck;
+    private int[] _deck;
+    private Random _random;
     
-    public PinochleDeck() {
-        _deck = new ArrayList<Card>(CARDS_IN_DECK);
+    public PinochleDeck(long randSeed) {
+        _deck = new int[CARDS_IN_DECK];
         
-        _deck.add(Card.ACE_SPADES);
-        _deck.add(Card.ACE_SPADES);
-        _deck.add(Card.TEN_SPADES);
-        _deck.add(Card.TEN_SPADES);
-        _deck.add(Card.KING_SPADES);
-        _deck.add(Card.KING_SPADES);
-        _deck.add(Card.QUEEN_SPADES);
-        _deck.add(Card.QUEEN_SPADES);
-        _deck.add(Card.JACK_SPADES);
-        _deck.add(Card.JACK_SPADES);
-        _deck.add(Card.NINE_SPADES);
-        _deck.add(Card.NINE_SPADES);
-
-        _deck.add(Card.ACE_HEARTS);
-        _deck.add(Card.ACE_HEARTS);
-        _deck.add(Card.TEN_HEARTS);
-        _deck.add(Card.TEN_HEARTS);
-        _deck.add(Card.KING_HEARTS);
-        _deck.add(Card.KING_HEARTS);
-        _deck.add(Card.QUEEN_HEARTS);
-        _deck.add(Card.QUEEN_HEARTS);
-        _deck.add(Card.JACK_HEARTS);
-        _deck.add(Card.JACK_HEARTS);
-        _deck.add(Card.NINE_HEARTS);
-        _deck.add(Card.NINE_HEARTS);
-
-        _deck.add(Card.ACE_DIAMONDS);
-        _deck.add(Card.ACE_DIAMONDS);
-        _deck.add(Card.TEN_DIAMONDS);
-        _deck.add(Card.TEN_DIAMONDS);
-        _deck.add(Card.KING_DIAMONDS);
-        _deck.add(Card.KING_DIAMONDS);
-        _deck.add(Card.QUEEN_DIAMONDS);
-        _deck.add(Card.QUEEN_DIAMONDS);
-        _deck.add(Card.JACK_DIAMONDS);
-        _deck.add(Card.JACK_DIAMONDS);
-        _deck.add(Card.NINE_DIAMONDS);
-        _deck.add(Card.NINE_DIAMONDS);
-
-        _deck.add(Card.ACE_CLUBS);
-        _deck.add(Card.ACE_CLUBS);
-        _deck.add(Card.TEN_CLUBS);
-        _deck.add(Card.TEN_CLUBS);
-        _deck.add(Card.KING_CLUBS);
-        _deck.add(Card.KING_CLUBS);
-        _deck.add(Card.QUEEN_CLUBS);
-        _deck.add(Card.QUEEN_CLUBS);
-        _deck.add(Card.JACK_CLUBS);
-        _deck.add(Card.JACK_CLUBS);
-        _deck.add(Card.NINE_CLUBS);
-        _deck.add(Card.NINE_CLUBS);
+        int i = 0;
+        for (int suit : Suit.SUITS) {
+            for (int rank : Rank.RANKS) {
+                int card = Card.makeCard(rank, suit);
+                _deck[i++] = card;
+                _deck[i++] = card;
+            }
+        }
+        
+        _random = new Random(randSeed);
     }
     
     public void shuffle() {
-        // 3 seconds for 1M shuffles of full deck with -server JVM option
-        Collections.shuffle(_deck);
+        // Durstenfeld version of a Fisher–Yates shuffle
+        for (int i = _deck.length - 1; i > 0; i--) {
+            int index = _random.nextInt(i + 1);
+            // Simple swap
+            int a = _deck[index];
+            _deck[index] = _deck[i];
+            _deck[i] = a;
+        }
     }
-    
-    public List<Card> getCards(int startIndex, int numCards) {
-        return _deck.subList(startIndex, startIndex + numCards);
-    }
-    
 
+    /**
+     * After a shuffle, used to allocate cards to players (the deal).
+     * 
+     * @param player
+     * @param i
+     * @return card at indicated position in deck for requested player & card index.
+     */
+    public int getCard(int player, int i) {
+        if ((player < 0) || (player >= PinochleGame.NUM_PLAYERS)) {
+            throw new IllegalArgumentException("Invalid player index: " + player);
+        }
+        
+        if ((i < 0) || (i >= PinochleHand.CARDS_IN_HAND)) {
+            throw new IllegalArgumentException("Invalid card index: " + i);
+        }
+        
+        return _deck[(player * PinochleHand.CARDS_IN_HAND) + i];
+    }
+      
+    
 }

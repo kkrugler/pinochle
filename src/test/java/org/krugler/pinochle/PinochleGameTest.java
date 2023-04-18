@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class PinochleHandBitsTest {
+public class PinochleGameTest {
 
     @Test
     public void test() {

@@ -1,109 +1,54 @@
 package org.krugler.pinochle;
 
-public class Card implements Comparable<Card> {
-    public static final Card NINE_CLUBS = new Card(Rank.NINE, Suit.CLUBS);
-    public static final Card JACK_CLUBS = new Card(Rank.JACK, Suit.CLUBS);
-    public static final Card QUEEN_CLUBS = new Card(Rank.QUEEN, Suit.CLUBS);
-    public static final Card KING_CLUBS = new Card(Rank.KING, Suit.CLUBS);
-    public static final Card TEN_CLUBS = new Card(Rank.TEN, Suit.CLUBS);
-    public static final Card ACE_CLUBS = new Card(Rank.ACE, Suit.CLUBS);
+public class Card {
+    public static final int NINE_CLUBS = makeCard(Rank.NINE, Suit.CLUBS);
+    public static final int JACK_CLUBS = makeCard(Rank.JACK, Suit.CLUBS);
+    public static final int QUEEN_CLUBS = makeCard(Rank.QUEEN, Suit.CLUBS);
+    public static final int KING_CLUBS = makeCard(Rank.KING, Suit.CLUBS);
+    public static final int TEN_CLUBS = makeCard(Rank.TEN, Suit.CLUBS);
+    public static final int ACE_CLUBS = makeCard(Rank.ACE, Suit.CLUBS);
     
-    public static final Card NINE_DIAMONDS = new Card(Rank.NINE, Suit.DIAMONDS);
-    public static final Card JACK_DIAMONDS = new Card(Rank.JACK, Suit.DIAMONDS);
-    public static final Card QUEEN_DIAMONDS = new Card(Rank.QUEEN, Suit.DIAMONDS);
-    public static final Card KING_DIAMONDS = new Card(Rank.KING, Suit.DIAMONDS);
-    public static final Card TEN_DIAMONDS = new Card(Rank.TEN, Suit.DIAMONDS);
-    public static final Card ACE_DIAMONDS = new Card(Rank.ACE, Suit.DIAMONDS);
+    public static final int NINE_DIAMONDS = makeCard(Rank.NINE, Suit.DIAMONDS);
+    public static final int JACK_DIAMONDS = makeCard(Rank.JACK, Suit.DIAMONDS);
+    public static final int QUEEN_DIAMONDS = makeCard(Rank.QUEEN, Suit.DIAMONDS);
+    public static final int KING_DIAMONDS = makeCard(Rank.KING, Suit.DIAMONDS);
+    public static final int TEN_DIAMONDS = makeCard(Rank.TEN, Suit.DIAMONDS);
+    public static final int ACE_DIAMONDS = makeCard(Rank.ACE, Suit.DIAMONDS);
     
-    public static final Card NINE_HEARTS = new Card(Rank.NINE, Suit.HEARTS);
-    public static final Card JACK_HEARTS = new Card(Rank.JACK, Suit.HEARTS);
-    public static final Card QUEEN_HEARTS = new Card(Rank.QUEEN, Suit.HEARTS);
-    public static final Card KING_HEARTS = new Card(Rank.KING, Suit.HEARTS);
-    public static final Card TEN_HEARTS = new Card(Rank.TEN, Suit.HEARTS);
-    public static final Card ACE_HEARTS = new Card(Rank.ACE, Suit.HEARTS);
+    public static final int NINE_HEARTS = makeCard(Rank.NINE, Suit.HEARTS);
+    public static final int JACK_HEARTS = makeCard(Rank.JACK, Suit.HEARTS);
+    public static final int QUEEN_HEARTS = makeCard(Rank.QUEEN, Suit.HEARTS);
+    public static final int KING_HEARTS = makeCard(Rank.KING, Suit.HEARTS);
+    public static final int TEN_HEARTS = makeCard(Rank.TEN, Suit.HEARTS);
+    public static final int ACE_HEARTS = makeCard(Rank.ACE, Suit.HEARTS);
     
-    public static final Card NINE_SPADES = new Card(Rank.NINE, Suit.SPADES);
-    public static final Card JACK_SPADES = new Card(Rank.JACK, Suit.SPADES);
-    public static final Card QUEEN_SPADES = new Card(Rank.QUEEN, Suit.SPADES);
-    public static final Card KING_SPADES = new Card(Rank.KING, Suit.SPADES);
-    public static final Card TEN_SPADES = new Card(Rank.TEN, Suit.SPADES);
-    public static final Card ACE_SPADES = new Card(Rank.ACE, Suit.SPADES);
+    public static final int NINE_SPADES = makeCard(Rank.NINE, Suit.SPADES);
+    public static final int JACK_SPADES = makeCard(Rank.JACK, Suit.SPADES);
+    public static final int QUEEN_SPADES = makeCard(Rank.QUEEN, Suit.SPADES);
+    public static final int KING_SPADES = makeCard(Rank.KING, Suit.SPADES);
+    public static final int TEN_SPADES = makeCard(Rank.TEN, Suit.SPADES);
+    public static final int ACE_SPADES = makeCard(Rank.ACE, Suit.SPADES);
     
-    private final Rank _rank;
-    private final Suit _suit;
+    private static final int COUNTERS = KING_CLUBS | TEN_CLUBS | ACE_CLUBS 
+                    | KING_DIAMONDS | TEN_DIAMONDS | ACE_DIAMONDS 
+                    | KING_HEARTS | TEN_HEARTS | ACE_HEARTS 
+                    | KING_SPADES | TEN_SPADES | ACE_SPADES;
     
-    public Card(Rank rank, Suit suit) {
-        _rank = rank;
-        _suit = suit;
-    }
-
-    public Rank getRank() {
-        return _rank;
-    }
-
-    public Suit getSuit() {
-        return _suit;
-    }
-
+    // Valid bits for a card.
+    private static final int CARD_MASK = 0x0FFFFFF;
     
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_rank == null) ? 0 : _rank.hashCode());
-        result = prime * result + ((_suit == null) ? 0 : _suit.hashCode());
-        return result;
+    public static int makeCard(int rank, int suit) {
+        return rank << suit;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Card other = (Card) obj;
-        if (_rank == null) {
-            if (other._rank != null)
-                return false;
-        } else if (!_rank.equals(other._rank))
-            return false;
-        if (_suit == null) {
-            if (other._suit != null)
-                return false;
-        } else if (!_suit.equals(other._suit))
-            return false;
-        return true;
-    }
-
-    @Override
-    public int compareTo(Card card) {
-        return _rank.compareTo(card._rank);
-    }
-
-    /**
-     * Return true if this card sorts after (is higher than)
-     * all of the provided cards.
-     *  
-     * @param cards
-     * @return
-     */
-    public boolean isGreaterThanAll(Card... cards) {
-        for (Card card : cards) {
-            if (compareTo(card) <= 0) {
-                return false;
-            }
+    
+    public static int compare(int cardA, int cardB) {
+        if (Suit.getSuitFromCard(cardA) != Suit.getSuitFromCard(cardB)) {
+            throw new IllegalArgumentException(String.format("Card %d has different suit than card %d", cardA, cardB));
         }
         
-        return true;
+        return Integer.compare(cardA, cardB);
     }
     
-    @Override
-    public String toString() {
-        return String.format("%s of %s", _rank, _suit);
-    }
-
     /**
      * Given previously played cards, return the position of the
      * winning card. We assume plays are all valid.
@@ -112,41 +57,66 @@ public class Card implements Comparable<Card> {
      * @param playedCards
      * @return position (0..n) in playedCards of winning play
      */
-    public static int winningCardPos(Suit trump, Card[] playedCards) {
-        if (playedCards.length != PinochleGame.NUM_PLAYERS) {
+    public static int winningCardPos(int trumpSuit, int[] playedCards, int handOffset, int handCardsPlayed) {
+        if (handCardsPlayed == 0) {
             throw new IllegalArgumentException("Not enough cards played");
+        } else if (handCardsPlayed > PinochleGame.NUM_PLAYERS) {
+            throw new IllegalArgumentException("Too many cards played");
         }
 
-        Suit ledSuit = playedCards[0].getSuit();
-        boolean trumpLed = (ledSuit == trump);
+        int topCard = playedCards[handOffset];
+        int topCardPos = handOffset;
+        int topCardSuit = Suit.getSuitFromCard(topCard);
 
-        Card topCard = null;
-        int topCardPos = 0;
-        
-        if (trumpLed) {
-            for (int i = 0; i < playedCards.length; i++) {
-                Card card = playedCards[i];
-                if ((topCard == null) || (card.compareTo(topCard) > 0)) {
+        for (int i = 1; i < handCardsPlayed; i++) {
+            int card = playedCards[handOffset + i];
+            int cardSuit = Suit.getSuitFromCard(card);
+
+            // If card is same suit as what was led, then we only care
+            // about comparing.
+            if (cardSuit == topCardSuit) {
+                if (Card.compare(card, topCard) > 0) {
                     topCard = card;
-                    topCardPos = i;
+                    topCardPos = handOffset + i;
                 }
-            }
-        } else {
-            boolean trumped = false;
-            for (int i = 0; i < playedCards.length; i++) {
-                Card card = playedCards[i];
-                if ((topCard == null)
-                 || (!trumped && (card.compareTo(topCard) > 0))
-                 || (trumped && (card.getSuit() == trump) && (card.compareTo(topCard) > 0))) {
-                    topCard = card;
-                    topCardPos = i;
-                    
-                    trumped = (topCard.getSuit() == trump);
-                }
+            } else if (cardSuit == trumpSuit) {
+                topCard = card;
+                topCardPos = handOffset + i;
+                topCardSuit = trumpSuit;
             }
         }
-        
+
         return topCardPos;
+    }
+
+    public static boolean isValid(int card) {
+        // Only one bit can be set, and this bit has to be in the
+        // range of valid bits
+        return BitUtil.isPowerOfTwo(card)
+            && ((card & CARD_MASK) != 0);
+    }
+
+    public static String toString(int card) {
+        return String.format("%s of %s", Rank.toString(Rank.getRankFromCard(card)), Suit.toString(Suit.getSuitFromCard(card)));
+    }
+
+    public static String asBits(int card) {
+        return String.format("%16s", Integer.toBinaryString(card)).replace(' ', '0');
+    }
+
+    public static int numCounters(int[] playedCards, int handOffset, int handCardsPlayed) {
+        int result = 0;
+        for (int i = 0; i < handCardsPlayed; i++) {
+            if (Card.isCounter(playedCards[handOffset + i])) {
+                result += 1;
+            }
+        }
+
+        return result;
+    }
+
+    private static boolean isCounter(int card) {
+        return (card & COUNTERS) != 0;
     }
     
 }

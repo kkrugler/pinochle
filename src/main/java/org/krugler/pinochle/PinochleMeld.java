@@ -1,19 +1,18 @@
 package org.krugler.pinochle;
 
-import java.util.Map;
 
 public class PinochleMeld {
     
     private static final PinochleMeld[] MELD = {
-        new PinochleMeld(0, 1, Card.NINE_CLUBS),
-        new PinochleMeld(0, 1, Card.NINE_DIAMONDS),
-        new PinochleMeld(0, 1, Card.NINE_HEARTS),
-        new PinochleMeld(0, 1, Card.NINE_SPADES),
+        new PinochleMeld(0, 1, true, Card.NINE_CLUBS),
+        new PinochleMeld(0, 1, true, Card.NINE_DIAMONDS),
+        new PinochleMeld(0, 1, true, Card.NINE_HEARTS),
+        new PinochleMeld(0, 1, true, Card.NINE_SPADES),
         
-        new PinochleMeld(2, 4, Card.KING_CLUBS, Card.QUEEN_CLUBS),
-        new PinochleMeld(2, 4, Card.KING_DIAMONDS, Card.QUEEN_DIAMONDS),
-        new PinochleMeld(2, 4, Card.KING_HEARTS, Card.QUEEN_HEARTS),
-        new PinochleMeld(2, 4, Card.KING_SPADES, Card.QUEEN_SPADES),
+        new PinochleMeld(2, 4, true, Card.KING_CLUBS, Card.QUEEN_CLUBS),
+        new PinochleMeld(2, 4, true, Card.KING_DIAMONDS, Card.QUEEN_DIAMONDS),
+        new PinochleMeld(2, 4, true, Card.KING_HEARTS, Card.QUEEN_HEARTS),
+        new PinochleMeld(2, 4, true, Card.KING_SPADES, Card.QUEEN_SPADES),
 
         // Pinochle & double Pinochle
         new PinochleMeld(4, 4, 30, 30, Card.JACK_DIAMONDS, Card.QUEEN_SPADES),
@@ -30,17 +29,23 @@ public class PinochleMeld {
         new PinochleMeld(0, 0, 11, 142, Card.JACK_SPADES, Card.QUEEN_SPADES, Card.KING_SPADES, Card.TEN_SPADES, Card.ACE_SPADES),
     };
     
-    private Card[] _cards;
+    private int[] _cards;
     private int _score;
     private int _trumpScore;
     private int _doubledScore;
     private int _doubledTrumpScore;
     
-    public PinochleMeld(int score, int trumpScore, Card... cards) {
+    /**
+     * @param score
+     * @param trumpScore
+     * @param doubleScore bogus param so compiler doesn't call us with fully expanded data (int... and int, int, int... look the same)
+     * @param cards
+     */
+    public PinochleMeld(int score, int trumpScore, boolean doubleScore, int... cards) {
         this(score, score * 2, trumpScore, trumpScore * 2, cards);
     }
     
-    public PinochleMeld(int score, int doubledScore, int trumpScore, int doubledTrumpScore, Card... cards) {
+    public PinochleMeld(int score, int doubledScore, int trumpScore, int doubledTrumpScore, int... cards) {
         _cards = cards;
         _score = score;
         _doubledScore = doubledScore;
@@ -48,8 +53,9 @@ public class PinochleMeld {
         _doubledTrumpScore = doubledTrumpScore;
     }
     
-    public int getScore(PinochleHand hand, Suit trumpSuit) {
-        boolean inTrump = trumpSuit == _cards[0].getSuit();
+    public int getScore(PinochleHand hand, int trumpSuit) {
+        boolean inTrump = trumpSuit == Suit.getSuitFromCard(_cards[0]);
+        
         // If we won't get any score unless the suit matches trump, do that check first.
         if ((_score == 0) && !inTrump) {
             return 0;
@@ -57,7 +63,7 @@ public class PinochleMeld {
         
         boolean twoOfEach = true;
         
-        for (Card card : _cards) {
+        for (int card : _cards) {
             int count = hand.countCards(card);
             if (count == 0) {
                 return 0;
@@ -83,7 +89,7 @@ public class PinochleMeld {
         }
     }
     
-    public static int totalScore(PinochleHand hand, Suit trumpSuit) {
+    public static int totalScore(PinochleHand hand, int trumpSuit) {
         int result = 0;
         for (PinochleMeld meld : MELD) {
             result += meld.getScore(hand, trumpSuit);
