@@ -52,6 +52,10 @@ public class PinochleGame {
         return _trumpSuit;
     }
     
+    public PinochleHand getHand(int player) {
+        return _hands[player];
+    }
+    
     private int makePlay(int depth, int player, int alpha, int beta, int handOffset, int handCardsPlayed, int evenScore) {
         int[] plays = _plays[depth];
         int numPlays = _hands[player].getPlays(_trumpSuit, _playedCards, handOffset, handCardsPlayed, plays);
@@ -139,8 +143,6 @@ public class PinochleGame {
                 handCardsPlayed = 0;
                 handOffset -= PinochleGame.NUM_PLAYERS;
             }
-            
-            return result;
         }
         
         return v;

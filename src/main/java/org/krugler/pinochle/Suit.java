@@ -6,14 +6,17 @@ public class Suit {
     // Each suit has 6 rank, so we define each suit
     // as the number of bits we have to shift in the card to get to the
     // set of cards for the suit.
-    public static final int CLUBS = 0;
-    public static final int DIAMONDS = CLUBS + 6;
-    public static final int HEARTS = DIAMONDS + 6;
-    public static final int SPADES = HEARTS + 6;
+    public static final int CLUBS       = 0;
+    public static final int DIAMONDS    = CLUBS + Rank.NUM_RANKS;
+    public static final int HEARTS      = DIAMONDS + Rank.NUM_RANKS;
+    public static final int SPADES      = HEARTS + Rank.NUM_RANKS;
 
     // Calling no trump is an option, so we define a special value for that.
-    public static final int NO_TRUMP = SPADES + 6;
+    public static final int NO_TRUMP    = SPADES + Rank.NUM_RANKS;
 
+    public static final int FIRST       = CLUBS;
+    public static final int LAST        = NO_TRUMP;
+    
     public static final int[] SUITS = {CLUBS, DIAMONDS, HEARTS, SPADES};
     
     public static int getSuitFromCard(int card) {
@@ -48,6 +51,8 @@ public class Suit {
             return "HEARTS";
         } else if (suit == SPADES) {
             return "SPADES";
+        } else if (suit == NO_TRUMP) {
+            return "NONE";
         } else {
             throw new IllegalArgumentException(String.format("Invalid suit: %d", suit));
         }

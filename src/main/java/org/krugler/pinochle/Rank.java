@@ -11,7 +11,10 @@ public class Rank {
     public static final int TEN     = 0x010;
     public static final int ACE     = 0x020;
 
-    public static final int[] RANKS = {NINE, JACK, QUEEN, KING, TEN, ACE};
+    public static final int FIRST   = NINE;
+    public static final int LAST    = ACE;
+    
+    public static final int[] RANKS = {ACE, TEN, KING, QUEEN, JACK, NINE};
     
     public static int getRankFromCard(int card) {
         int shiftAmount = BitUtil.ntz(card);
@@ -31,6 +34,24 @@ public class Rank {
             return "TEN";
         } else if (rank == ACE) {
             return "ACE";
+        } else {
+            throw new IllegalArgumentException("Invalid rank: " + rank);
+        }
+    }
+    
+    public static String toShortString(int rank) {
+        if (rank == NINE) {
+            return "9";
+        } else if (rank == JACK) {
+            return "J";
+        } else if (rank == QUEEN) {
+            return "Q";
+        } else if (rank == KING) {
+            return "K";
+        } else if (rank == TEN) {
+            return "T";
+        } else if (rank == ACE) {
+            return "A";
         } else {
             throw new IllegalArgumentException("Invalid rank: " + rank);
         }

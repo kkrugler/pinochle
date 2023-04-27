@@ -26,19 +26,19 @@ public class PinochleMeldTest {
                                 Card.JACK_DIAMONDS,
                                 Card.JACK_HEARTS);
         
-        Assert.assertEquals(0, PinochleMeld.totalScore(hand, Suit.CLUBS));
+        Assert.assertEquals(0, PinochleMeld.calcMeld(hand, Suit.CLUBS));
         
         hand.replaceCard(Card.ACE_HEARTS, Card.NINE_CLUBS);
-        Assert.assertEquals(1, PinochleMeld.totalScore(hand, Suit.CLUBS));
-        Assert.assertEquals(0, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(1, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(0, PinochleMeld.calcMeld(hand, Suit.HEARTS));
         
         hand.replaceCard(Card.ACE_DIAMONDS, Card.NINE_CLUBS);
-        Assert.assertEquals(2, PinochleMeld.totalScore(hand, Suit.CLUBS));
-        Assert.assertEquals(0, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(2, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(0, PinochleMeld.calcMeld(hand, Suit.HEARTS));
 
         hand.replaceCard(Card.TEN_CLUBS, Card.QUEEN_CLUBS);
-        Assert.assertEquals(6, PinochleMeld.totalScore(hand, Suit.CLUBS));
-        Assert.assertEquals(2, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(6, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(2, PinochleMeld.calcMeld(hand, Suit.HEARTS));
     }
     
     @Test
@@ -61,8 +61,8 @@ public class PinochleMeldTest {
                         
                         Card.JACK_DIAMONDS);
 
-        Assert.assertEquals(15, PinochleMeld.totalScore(hand, Suit.CLUBS));
-        Assert.assertEquals(2, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(15, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(2, PinochleMeld.calcMeld(hand, Suit.HEARTS));
     }
 
     @Test
@@ -83,8 +83,31 @@ public class PinochleMeldTest {
                         Card.ACE_DIAMONDS,
                         Card.ACE_HEARTS);
 
-        Assert.assertEquals(150, PinochleMeld.totalScore(hand, Suit.CLUBS));
-        Assert.assertEquals(4, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(150, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(4, PinochleMeld.calcMeld(hand, Suit.HEARTS));
+    }
+
+    @Test
+    public void testFourOfKind() throws Exception {
+        PinochleHand hand = new PinochleHand(
+                        Card.ACE_CLUBS,
+                        Card.ACE_DIAMONDS,
+                        Card.ACE_HEARTS,
+                        Card.ACE_SPADES,
+                        
+                        Card.TEN_CLUBS,
+                        Card.TEN_CLUBS,
+                        Card.TEN_DIAMONDS,
+                        Card.TEN_DIAMONDS,
+                        Card.TEN_HEARTS,
+                        Card.TEN_HEARTS,
+                        Card.TEN_SPADES,
+                        Card.TEN_SPADES);
+
+        Assert.assertEquals(10, PinochleMeld.calcMeld(hand, Suit.CLUBS));
+        Assert.assertEquals(10, PinochleMeld.calcMeld(hand, Suit.DIAMONDS));
+        Assert.assertEquals(10, PinochleMeld.calcMeld(hand, Suit.HEARTS));
+        Assert.assertEquals(10, PinochleMeld.calcMeld(hand, Suit.SPADES));
     }
 
     @Test
@@ -106,7 +129,7 @@ public class PinochleMeldTest {
                         Card.JACK_CLUBS,
                         Card.JACK_HEARTS);
 
-        Assert.assertEquals(28, PinochleMeld.totalScore(hand, Suit.SPADES));
-        Assert.assertEquals(12, PinochleMeld.totalScore(hand, Suit.HEARTS));
+        Assert.assertEquals(28, PinochleMeld.calcMeld(hand, Suit.SPADES));
+        Assert.assertEquals(12, PinochleMeld.calcMeld(hand, Suit.HEARTS));
     }
 }

@@ -15,12 +15,12 @@ public class PinochleMeld {
         new PinochleMeld(2, 4, true, Card.KING_SPADES, Card.QUEEN_SPADES),
 
         // Pinochle & double Pinochle
-        new PinochleMeld(4, 4, 30, 30, Card.JACK_DIAMONDS, Card.QUEEN_SPADES),
+        new PinochleMeld(4, 30, 4, 30, Card.JACK_DIAMONDS, Card.QUEEN_SPADES),
         
-        new PinochleMeld(4, 4, 40, 40, Card.JACK_CLUBS, Card.JACK_DIAMONDS, Card.JACK_HEARTS, Card.JACK_SPADES),
-        new PinochleMeld(6, 6, 60, 60, Card.QUEEN_CLUBS, Card.QUEEN_DIAMONDS, Card.QUEEN_HEARTS, Card.QUEEN_SPADES),
-        new PinochleMeld(8, 8, 80, 80, Card.KING_CLUBS, Card.KING_DIAMONDS, Card.KING_HEARTS, Card.KING_SPADES),
-        new PinochleMeld(10, 10, 100, 100, Card.ACE_CLUBS, Card.ACE_DIAMONDS, Card.ACE_HEARTS, Card.ACE_SPADES),
+        new PinochleMeld(4, 40, 4, 40, Card.JACK_CLUBS, Card.JACK_DIAMONDS, Card.JACK_HEARTS, Card.JACK_SPADES),
+        new PinochleMeld(6, 60, 6, 60, Card.QUEEN_CLUBS, Card.QUEEN_DIAMONDS, Card.QUEEN_HEARTS, Card.QUEEN_SPADES),
+        new PinochleMeld(8, 80, 8, 80, Card.KING_CLUBS, Card.KING_DIAMONDS, Card.KING_HEARTS, Card.KING_SPADES),
+        new PinochleMeld(10, 100, 10, 100, Card.ACE_CLUBS, Card.ACE_DIAMONDS, Card.ACE_HEARTS, Card.ACE_SPADES),
 
         // Run & double-run. Subtract marriage score, which will also be added in.
         new PinochleMeld(0, 0, 11, 142, Card.JACK_CLUBS, Card.QUEEN_CLUBS, Card.KING_CLUBS, Card.TEN_CLUBS, Card.ACE_CLUBS),
@@ -89,7 +89,7 @@ public class PinochleMeld {
         }
     }
     
-    public static int totalScore(PinochleHand hand, int trumpSuit) {
+    public static int calcMeld(PinochleHand hand, int trumpSuit) {
         int result = 0;
         for (PinochleMeld meld : MELD) {
             result += meld.getScore(hand, trumpSuit);

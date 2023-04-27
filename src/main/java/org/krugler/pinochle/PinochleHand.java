@@ -8,26 +8,35 @@ public class PinochleHand {
     public static final int CARDS_IN_HAND = PinochleDeck.CARDS_IN_DECK / 4;
     
     private int _totalCards;
+    
+    // A hand has two sets of 32 bits, each representing the 24 unique
+    // cards. Low set has the first card, high set has the second card.
     private long _hand;
     
     public PinochleHand(PinochleDeck deck, int player) {
+        init();
+        
         for (int i = 0; i < CARDS_IN_HAND; i++) {
             addCard(deck.getCard(player, i));
         }
     }
     
     public PinochleHand(int... cards) {
+        init();
+        
         if (cards.length != CARDS_IN_HAND) {
             throw new IllegalArgumentException("Not enough cards in the hand");
         }
         
-        _totalCards = 0;
-        _hand = 0;
         for (int card : cards) {
             addCard(card);
         }
     }
     
+    private void init() {
+        _totalCards = 0;
+        _hand = 0;
+    }
     
     private void addCard(int card) {
         if (!Card.isValid(card)) {
@@ -45,8 +54,7 @@ public class PinochleHand {
         }
         
         _hand |= handCard;
-        
-        _totalCards += 1;
+        _totalCards++;
     }
 
     public int countCards(int card) {
@@ -118,13 +126,7 @@ public class PinochleHand {
         
         // See if we get to lead
         if (handCardsPlayed == 0) {
-            // Return all unique cards we've got in our hand. We'll worry about sorting these
-            // later.
-            for (int card = 1, cardIndex = 0; cardIndex < PinochleDeck.UNIQUE_CARDS_IN_DECK; cardIndex++, card <<= 1) {
-                if (isCardInHand(card)) {
-                    plays[numPlays++] = card;
-                }
-            }
+            numPlays += getUniqueCards(plays, numPlays);
         } else {
             int ledSuit = Suit.getSuitFromCard(playedCards[handOffset]);
             int winningPlayPos = Card.winningCardPos(trumpSuit, playedCards, handOffset, handCardsPlayed);
@@ -188,6 +190,33 @@ public class PinochleHand {
     }
     
 
+    /**
+     * Add unique cards in hand to <plays>, starting at <offset>.
+     * 
+     * @param plays
+     * @param offset
+     * @return number of cards added.
+     */
+    public int getUniqueCards(int[] plays, int offset) {
+        int count = 0;
+        int remainingCards = _totalCards;
+        // We only care about the first instance of any card.
+        int curHandBits = (int)_hand;
+        int curCard = Card.makeCard(Rank.FIRST, Suit.FIRST);
+        while ((remainingCards > 0) && (curHandBits != 0)) {
+            if ((curHandBits & 0x01) != 0) {
+                plays[offset++] = curCard;
+                remainingCards--;
+                count++;
+            }
+            
+            curCard <<= 1;
+            curHandBits >>= 1;
+        }
+        
+        return count;
+    }
+
     private boolean isCardInHand(int card) {
         return (_hand & card) != 0;
     }
@@ -245,5 +274,31 @@ public class PinochleHand {
         unplayCard(newCard);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        
+        int curSuit = Suit.NO_TRUMP;
+        for (int suit : Suit.SUITS) {
+            for (int rank : Rank.RANKS) {
+                int card = Card.makeCard(rank, suit);
+                for (int i = 0; i < countCards(card); i++) {
+                    if (suit != curSuit) {
+                        if (curSuit != Suit.NO_TRUMP) {
+                            result.append(", ");
+                        }
+                        
+                        result.append(Suit.toString(suit));
+                        result.append(": ");
+                        curSuit = suit;
+                    }
+                    
+                    result.append(Rank.toShortString(rank));
+                }
+            }
+        }
+
+        return result.toString();
+    }
     
 }
